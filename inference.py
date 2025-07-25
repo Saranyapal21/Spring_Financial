@@ -1,3 +1,17 @@
+#   The below code implements the inference pipeline using the saved models (Refer to Models/)
+#   Works for any models (tree or non-tree models except the Neural Network)
+
+#   NOTE:-
+#   While using tree-based models, always use 'final_df_not_qt' as the dataset
+#   While using non-tree models, always use 'final_df_qt' as the dataset
+#   The below example is inference using a tree-based ensemble model (The best model infact, with ~75% accuracy).
+#   Due to this, 'final_df_not_qt' was used as the dataset
+
+#   If you just want to perform inference using some datasets, run inference.py
+#   Note that you dont need to pre-process data manually. It is automatically taken care of...
+#   However, the format of the data must be maintained (should be similar to the current one)
+
+
 import os
 import pickle
 import numpy as np
@@ -8,7 +22,7 @@ from dataloader import pre_process_df
 
 
 
-#   Works for tree or non-tree models as well (All models except the Neural Network)
+
 def perform_inference(final_df_qt, final_df_not_qt, MODEL_SAVE_PATH):
     model_filename = "catboost_depth3_iter250_lr0.05.pkl"
     model_path = os.path.join(MODEL_SAVE_PATH, model_filename)

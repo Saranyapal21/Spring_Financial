@@ -1,3 +1,10 @@
+#   All-in-one module that does literally everything!!!
+#   From Pre-processing to model training to inference using a trained model.
+#   So, just update the data with your custom data and run main.py
+#   Everything will automatically run
+#   Even inference will also be automatically performed
+
+
 import os
 import pickle
 import numpy as np
