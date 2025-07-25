@@ -20,7 +20,6 @@ def drop_cols_and_fill_na_values(df):
 
 
 
-
 def create_cat_num_and_oth_features(df):  
     num_features, cat_feature, oth_features = [], [], []
 
@@ -47,7 +46,9 @@ def transform_num_and_oth_features(df_copy):
     qt_transformed = pd.DataFrame(qt.fit_transform(df_copy[qt_features]),
                               columns=[f for f in qt_features])
 
-    return qt_transformed
+    qt_not_transformed = df_copy[qt_features]
+
+    return qt_transformed, qt_not_transformed
 
 
 
@@ -75,7 +76,7 @@ def transform_cat_features(df_copy, cat_features):
         if unique_vals == 2:
             encoded_parts.append(df_copy[[col]])
         elif unique_vals <= 5:
-            ohe_df = pd.get_dummies(df_copy[col], prefix=col, drop_first=True)
+            ohe_df = pd.get_dummies(df_copy[col], prefix=col, drop_first=True).astype(int)
             encoded_parts.append(ohe_df)
         else:
             top_classes = val_counts.index[:3]  # Top 3
@@ -102,17 +103,29 @@ def merge_and_concatenate(num_and_oth_df, cat_df, original_df):
 
 
 #   This single function does all the pre-processing
-def pre_process_df(original_df):
+def pre_process_df(original_df, drop_high_corr=True):
     num_features, cat_features, oth_features = create_cat_num_and_oth_features(original_df)
     df_no_missing = drop_cols_and_fill_na_values(original_df)    #   No categorical cols will be affected
 
 
-    qt_df = transform_num_and_oth_features(df_no_missing)
+    #   For fitting tree-based models like XgBoost etc, data transfomation especially 
+    #   Quantile-transform and StandardScaler are often known to detoriate performance.
+    #   So, while fitting those tree-based models, we must not perform this step
+
+    qt_df, qt_not_df = transform_num_and_oth_features(df_no_missing)
     cat_df = transform_cat_features(df_no_missing, cat_features)
 
 
-    final_df = merge_and_concatenate(qt_df, cat_df, original_df)
-    return final_df
+    final_df = merge_and_concatenate(qt_df, cat_df, df_no_missing)
+    final_df_not_qt = merge_and_concatenate(qt_not_df, cat_df, df_no_missing)
+
+
+    if drop_high_corr == True:
+        final_df.drop(['feature_38', 'feature_45'], axis=1, inplace=True)
+        final_df_not_qt.drop(['feature_38', 'feature_45'], axis=1, inplace=True)
+    
+
+    return final_df, final_df_not_qt
 
 
 
@@ -126,6 +139,13 @@ if __name__ == '__main__':
     PREPROCESSED_PATH = os.getenv('PREPROCESSED_PATH')
     df = pd.read_csv(DATA_PATH)
 
-    final_df = pre_process_df(df)
-    file_path = os.path.join(PREPROCESSED_PATH, 'final_df.csv')
-    final_df.to_csv(file_path, index=False)
+    final_df, final_df_not_qt = pre_process_df(df, drop_high_corr=True)    #   'False' if you don't want to drop high corr features
+
+    print(final_df.shape)
+    print(final_df_not_qt.shape)
+    
+    file_path_qt = os.path.join(PREPROCESSED_PATH, 'final_df.csv')
+    file_path_not_qt = os.path.join(PREPROCESSED_PATH, 'final_df_not_qt.csv')
+
+    final_df.to_csv(file_path_qt, index=False)
+    final_df_not_qt.to_csv(file_path_not_qt, index=False)
