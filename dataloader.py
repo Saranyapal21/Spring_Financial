@@ -37,16 +37,16 @@ def create_cat_num_and_oth_features(df):
 
 
 
-
 #   Will return a new_df having the transformed features
 def transform_num_and_oth_features(df_copy):
     qt = QuantileTransformer(output_distribution='normal', random_state=42)
-
+    
     qt_features = ['feature_2', 'feature_12', 'feature_15', 'feature_17', 'feature_6', 'feature_7', 'feature_9', 'feature_38', 'feature_39', 'feature_42', 'feature_43', 'feature_44', 'feature_46', 'feature_0', 'feature_1', 'feature_3', 'feature_4', 'feature_10', 'feature_21', 'feature_33', 'feature_34', 'feature_40', 'feature_41', 'feature_45', 'feature_47']
+    qt_not_transformed = df_copy[qt_features]
+
     qt_transformed = pd.DataFrame(qt.fit_transform(df_copy[qt_features]),
                               columns=[f for f in qt_features])
 
-    qt_not_transformed = df_copy[qt_features]
 
     return qt_transformed, qt_not_transformed
 
