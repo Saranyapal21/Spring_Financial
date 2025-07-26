@@ -50,16 +50,16 @@ Everything in your custom data should match the sample data, including the colum
 
 As mentioned earlier, this repository provides the flexibility to pre-process your own dataset (and not the one already uploaded), train model on it and then perform inference. The below steps 
 shows it how:
-- Create a `Config` folder and in the parent directory of the repository and create a `.env` file inside it
+- Create a `Config` folder in the parent directory of the repository (the base directory) and create a `.env` file inside it
 - Store these important paths inside the `.env` file:
   ```Bash
    DATA_PATH=
    MODEL_SAVE_PATH=
-   PRE_PROCESSED_PATH=
+   PREPROCESSED_PATH=
 
 The main purpose of these different environement variables mentioned above are as follows:- 
 - `DATA_PATH` is the path to the actual unprocessed data. After you upload your own data inside the `Data/` folder, copy its path and update the `DATA_PATH` inside the .env with that path.
-- `PRE_PROCESSED_PATH` is the path to the folder that decides where your pre-processed data will be stored. Just use the `Data/Pre_Processed` as the path for the `PRE_PROCESSED_PATH` env variable and then modify the codes accordingly as per your filename.
+- `PREPROCESSED_PATH` is the path to the folder that decides where your pre-processed data will be stored. Just use the `Data/Pre_Processed` as the path for the `PRE_PROCESSED_PATH` env variable and then modify the codes accordingly as per your filename.
 -  `MODEL_SAVE_PATH` refers to the path to the folder where your model (trained on the pre-processed data) will be saved after training. Just use the `Models/` as the path for the `MODEL_SAVE_PATH` env variable and then modify the codes accordingly as per your filename.
 
 **Important:-**
