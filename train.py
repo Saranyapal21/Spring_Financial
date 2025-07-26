@@ -46,8 +46,6 @@ def model_fit_and_save(X_train, y_train, model, MODEL_SAVE_PATH, use_poly=False,
 
     steps.append(('model', model))
     pipeline = Pipeline(steps)
-    
-    # Fit model
     pipeline.fit(X_train, y_train)
 
 
@@ -61,7 +59,7 @@ def model_fit_and_save(X_train, y_train, model, MODEL_SAVE_PATH, use_poly=False,
 
     filename = os.path.join(MODEL_SAVE_PATH, f'{model_name}.pkl')
 
-    # Save pipeline
+
     with open(filename, 'wb') as f:
         pickle.dump(pipeline, f)
 
@@ -90,10 +88,7 @@ def save_simple_models(X_train, y_train, MODEL_SAVE_PATH):
 def train_and_save_tree_model(X_train, y_train, model, model_name, MODEL_SAVE_PATH):
     model.fit(X_train, y_train)
 
-    # Save path
     file_path = os.path.join(MODEL_SAVE_PATH, f'{model_name}.pkl')
-
-    # Save using pickle
     with open(file_path, 'wb') as f:
         pickle.dump(model, f)
 

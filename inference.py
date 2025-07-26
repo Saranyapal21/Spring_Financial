@@ -27,7 +27,7 @@ def perform_inference(final_df_qt, final_df_not_qt, MODEL_SAVE_PATH):
     model_filename = "catboost_depth3_iter250_lr0.05.pkl"
     model_path = os.path.join(MODEL_SAVE_PATH, model_filename)
 
-    # Load the model from disk
+    # Load the model
     with open(model_path, "rb") as f:
         model = pickle.load(f)
 
