@@ -83,3 +83,29 @@ model as per your need and convenience.
 
 So, if you simply want to perform inference using the best model, upload your dataset, follow the setting up steps for the repo as mentioned above and run inference.py. The predictions 
 (predicted lables as well as the predicted_probabilities) will be printed in the terminal for each of the datapoint present in the inference
+
+
+---
+
+### Brief overview of techniques used during loading data and training:-
+
+**dataloader.py**
+
+   - **drop_cols_and_fill_na_values**: Drops noisy column and fills missing values using **median**.
+   - **create_cat_num_and_oth_features**: Splits columns into numerical, categorical, and other types (3 types total)
+   - **transform_num_and_oth_features**: Applies **quantile transformation** to selected numerical features.
+   - **standardize_rem_features**: Standard scales a few specific numerical columns.
+   - **transform_cat_features**: One-hot encodes categorical variables with different strategies based on unique value count.
+   - **merge_and_concatenate**: Combines all processed numerical, categorical, and untouched columns into final dataframe.
+   - **pre_process_df**: Master function to handle full preprocessing pipeline. Returns two versions of processed data.
+
+
+**train.py**
+
+   - **model_fit_and_save**: Trains and saves classical ML models (SVC, LogisticRegression) with optional polynomial features.
+   - **save_simple_models**: Trains and saves baseline classical models like LogisticRegression and SVMs.
+   - **train_and_save_tree_model**: Trains and saves a tree-based model (CatBoost, XGBoost, etc.).
+   - **save_top_tree_models**: Trains and saves all top tree-based ensemble models.
+   - **Network_v1**: Simple feedforward neural network for binary classification.
+   - **train_and_save_neural_net_model**: Trains the neural network and saves the model weights.
+   - **save_all_models**: Trains and saves all best-performing models using both versions of the preprocessed data.
