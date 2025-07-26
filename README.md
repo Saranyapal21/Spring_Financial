@@ -21,17 +21,21 @@ optimal results was removed in the python files. And the most important files (w
 
 
 ## Steps to run the repo locally:-
-Follow below steps if you want to simply run the implementations locally:-
+I personally used the `uv package manager` to maintain this project. So the steps mentioned work well with `uv`. Follow below steps if you want to simply run the implementations locally:-
 1. Clone the repo using:  
    ```bash
    git clone https://github.com/Saranyapal21/Spring_Financial.git
    cd Spring_Financial
+   uv python install 3.12
+   uv venv --python 3.12 .venv
 2. Activate .venv (example for Unix-based systems):
    ```bash
    source .venv/bin/activate
+   uv pip install --upgrade pip setuptools wheel
+   rm -rf build dist *.egg-info
 3. Install dependencies from pyproject.toml:
    ```bash
-   pip install .
+   uv pip install .
 
 After this, you need to add a `Config` folder in the parent directory of the repository and create a `.env` file inside the Config folder. That `.env` file will contain paths to 
 some of the important locations necessary to run the code properly. Please update the `.env` file using the steps mentioned below. The repo provides us the flexibility on training any model 
