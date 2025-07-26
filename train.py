@@ -28,7 +28,7 @@ from sklearn.svm import SVC
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
 
 
 import torch
@@ -96,20 +96,31 @@ def train_and_save_tree_model(X_train, y_train, model, model_name, MODEL_SAVE_PA
 
 def save_top_tree_models(X_train, y_train, MODEL_SAVE_PATH):
     # 1. CatBoost
-    model = CatBoostClassifier(depth=3, iterations=250, learning_rate=0.05, verbose=0, random_state=42)
-    train_and_save_tree_model(X_train, y_train, model, 'catboost_depth3_iter250_lr0.05', MODEL_SAVE_PATH)
+    model_cb = CatBoostClassifier(depth=3, iterations=250, learning_rate=0.05, verbose=0, random_state=42)
+    train_and_save_tree_model(X_train, y_train, model_cb, 'catboost_depth3_iter250_lr0.05', MODEL_SAVE_PATH)
 
     # 2. XGBoost
-    model = xgb.XGBClassifier(max_depth=3, n_estimators=250, learning_rate=0.05, eval_metric='logloss', random_state=42)
-    train_and_save_tree_model(X_train, y_train, model, 'xgboost_depth3_estimators250_lr0.05', MODEL_SAVE_PATH)
+    model_xgb = xgb.XGBClassifier(max_depth=3, n_estimators=250, learning_rate=0.05, eval_metric='logloss', random_state=42)
+    train_and_save_tree_model(X_train, y_train, model_xgb, 'xgboost_depth3_estimators250_lr0.05', MODEL_SAVE_PATH)
 
     # 3. Random Forest
-    model = RandomForestClassifier(max_depth=7, n_estimators=250, random_state=42)
-    train_and_save_tree_model(X_train, y_train, model, 'randomforest_depth7_estimators250', MODEL_SAVE_PATH)
+    model_rf = RandomForestClassifier(max_depth=7, n_estimators=250, random_state=42)
+    train_and_save_tree_model(X_train, y_train, model_rf, 'randomforest_depth7_estimators250', MODEL_SAVE_PATH)
 
     # 4. LightGBM
-    model = lgb.LGBMClassifier(max_depth=3, n_estimators=250, learning_rate=0.05, force_col_wise=True, verbosity=-1, random_state=42)
-    train_and_save_tree_model(X_train, y_train, model, 'lightgbm_depth3_estimators250_lr0.05', MODEL_SAVE_PATH)
+    model_lgb = lgb.LGBMClassifier(max_depth=3, n_estimators=250, learning_rate=0.05, force_col_wise=True, verbosity=-1, random_state=42)
+    train_and_save_tree_model(X_train, y_train, model_lgb, 'lightgbm_depth3_estimators250_lr0.05', MODEL_SAVE_PATH)
+
+    # 5. Combined 'Soft Voting' Model
+    ensemble_model = VotingClassifier(
+        estimators=[
+            ('catboost', model_cb),
+            ('xgboost', model_xgb),
+            ('randomforest', model_rf)
+        ],
+        voting='soft'
+    )
+    train_and_save_tree_model(X_train, y_train, ensemble_model, 'best_model', MODEL_SAVE_PATH)
 
 
 

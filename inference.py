@@ -24,17 +24,17 @@ from dataloader import pre_process_df
 
 
 def perform_inference(final_df_qt, final_df_not_qt, MODEL_SAVE_PATH):
-    model_filename = "catboost_depth3_iter250_lr0.05.pkl"
+    # model_filename = "catboost_depth3_iter250_lr0.05.pkl"
+    model_filename = "best_model.pkl"       #   Change it as needed
     model_path = os.path.join(MODEL_SAVE_PATH, model_filename)
 
     # Load the model
     with open(model_path, "rb") as f:
         model = pickle.load(f)
 
-
-    y_pred = model.predict(final_df_not_qt)
+    y_pred = model.predict(final_df_not_qt.drop('target', axis=1))
     try:
-        y_prob = model.predict_proba(final_df_not_qt)[:, 1]
+        y_prob = model.predict_proba(final_df_not_qt.drop('target', axis=1))[:, 1]
     except AttributeError:
         y_prob = None
 
