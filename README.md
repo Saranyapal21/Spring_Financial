@@ -80,8 +80,8 @@ single command. Just use `python3 main.py` to run the end-to-end pipeline.
 ### Purpose of current saved .pkl models
 
 The problem statement mentioned training ML models on the **entire** dataset provided. In accordance to that, all the top-performing models are saved inside the Models/ folder as .pkl file and are trained on the entire dataset.
-Only the Neural Network model is stored as .pt (instead of .pkl) where we need to load state_dict() in order to perform inference with that model. As our experiments suggest, the **CatBoost model**, named as
-`catboost_depth3_iter250_lr0.05.pkl` is the best performing model. Even the current inference.py uses that model to perform inference. Of course, you can customise that and use a different 
+Only the Neural Network model is stored as .pt (instead of .pkl) where we need to load state_dict() in order to perform inference with that model. As our experiments suggest, the **Combination model, where CatBoost, XgBoost and Random Forest was combined using Soft Voting**, named as
+`best_model.pkl` is the best performing model. Even the current inference.py uses that model to perform inference. Of course, you can customise that and use a different 
 model as per your need and convenience.
 
 
